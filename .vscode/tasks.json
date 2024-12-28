@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "TSC Compile",
+            "command": "npx",
+            "args": [
+                "tsc",
+                "-p",
+                "."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build",
+            "detail": "TSC: build - tsconfig.json using npx",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "default"
+            }
+        }
+    ]
+}

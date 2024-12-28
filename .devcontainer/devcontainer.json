@@ -1,0 +1,22 @@
+{
+    "name": "lambda-event",
+    "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:20",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+                "editor.formatOnType": false,
+                "editor.formatOnPaste": true,
+                "editor.formatOnSave": true
+            },
+            "extensions": [
+                "rvest.vs-code-prettier-eslint"
+            ]
+        }
+    },
+    "postCreateCommand": "npm install"
+}
