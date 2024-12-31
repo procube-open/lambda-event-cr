@@ -1,4 +1,4 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import fetch from 'node-fetch';
 import YAML from 'js-yaml';
 
@@ -8,7 +8,12 @@ const configKey = process.env.CONFIG_KEY || 'scheduler-configs';
 
 const s3Client = new S3Client({ 
   endpoint: s3Endpoint, 
-  forcePathStyle: true // MinIOを使用する場合に必要
+  forcePathStyle: true, // MinIOを使用する場合に必要
+  region: "local-minio",
+  credentials: {
+    accessKeyId: process.env.MINIO_ROOT_USER || '', // 環境変数から取得
+    secretAccessKey: process.env.MINIO_ROOT_PASSWORD || '' // 環境変数から取得
+  }
 });
 
 interface SchedulerConfig {
@@ -21,14 +26,14 @@ interface SchedulerConfig {
  * @param rateExpression rate式
  * @returns cron式
  */
-const convertRateExpressionToCron = (rateExpression: string): string => {
+const convertRateExpressionToMilliseconds = (rateExpression: string): number => {
   // rate式をcron式に変換するロジックを実装
   // 例: rate(3 minutes) => */3 * * * *
   // ここでは簡略化のため、rate(minutes) のみに対応
-  const match = rateExpression.match(/rate\((\d+) minutes?\)/);
+  const match = rateExpression.match(/rate\((\d+) *minutes?\)/);
   if (match) {
     const minutes = match[1];
-    return `*/${minutes} * * * *`;
+    return parseInt(minutes) * 60 * 1000;
   } else {
     throw new Error(`Invalid rate expression: ${rateExpression}`);
   }
@@ -70,7 +75,8 @@ const generateEventData = (): EventData => {
  * @param config スケジューラの設定
  */
 const runScheduler = (config: SchedulerConfig) => {
-  const cronExpression = convertRateExpressionToCron(config.rateExpression);
+  const mills = convertRateExpressionToMilliseconds(config.rateExpression);
+  console.log(`Invoke scheduler rate=${mills}millisceconds for targetURL${config.targetUrl}`);
 
   // cron式に基づいてイベントを定期的に送信
   setInterval(() => {
@@ -92,19 +98,7 @@ const runScheduler = (config: SchedulerConfig) => {
     .catch(err => {
       console.error(`Failed to send event to ${config.targetUrl}: ${err}`);
     });
-  }, cronExpressionToMilliseconds(cronExpression)); // cron式をミリ秒に変換
-};
-
-/**
- * cron式をミリ秒に変換する関数
- * @param cronExpression cron式
- * @returns ミリ秒
- */
-const cronExpressionToMilliseconds = (cronExpression: string): number => {
-  // cron式をミリ秒に変換するロジックを実装
-  // ここでは簡略化のため、"* * * * *" の形式のみに対応
-  const [minute] = cronExpression.split(' ');
-  return parseInt(minute) * 60 * 1000;
+  }, mills);
 };
 
 /**
@@ -113,16 +107,38 @@ const cronExpressionToMilliseconds = (cronExpression: string): number => {
  */
 const loadConfigsFromS3 = async (): Promise<SchedulerConfig[]> => {
   try {
-    const command = new GetObjectCommand({
+    // configKey をプレフィックスとして持つオブジェクトのリストを取得
+    const listCommand = new ListObjectsV2Command({
       Bucket: configBucketName,
-      Key: configKey,
+      Prefix: configKey,
     });
-    const response = await s3Client.send(command);
-    const body = await response.Body?.transformToString();
-    if (!body) {
-      throw new Error('Failed to load config file from S3.');
+    const listResponse = await s3Client.send(listCommand);
+    const contents = listResponse.Contents;
+
+    if (!contents) {
+      throw new Error(`No objects found in the specified bucket: ${configBucketName} and key: ${configKey}.`);
     }
-    const configs = YAML.load(body) as SchedulerConfig[];
+
+    // 拡張子が .yml であるオブジェクトをフィルタリング
+    const yamlFiles = contents.filter(obj => obj.Key?.endsWith('.yml'));
+
+    // 各 YAML ファイルの内容を読み込む
+    const configs: SchedulerConfig[] = [];
+    for (const yamlFile of yamlFiles) {
+      if (yamlFile.Key) {
+        const command = new GetObjectCommand({
+          Bucket: configBucketName,
+          Key: yamlFile.Key,
+        });
+        const response = await s3Client.send(command);
+        const body = await response.Body?.transformToString();
+        if (body) {
+          const config = YAML.load(body) as SchedulerConfig;
+          configs.push(config);
+        }
+      }
+    }
+
     return configs;
   } catch (error) {
     console.error('Error loading configs from S3:', error);

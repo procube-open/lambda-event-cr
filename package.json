@@ -7,9 +7,12 @@
   "author": "Mitsuru Nakakawaji <mitsuru@procube.jp>",
   "license": "MIT",
   "private": false,
+  "type": "module",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

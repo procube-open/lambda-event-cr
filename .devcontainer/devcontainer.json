@@ -18,5 +18,9 @@
             ]
         }
     },
-    "postCreateCommand": "npm install"
+    "postCreateCommand": "npm install",
+    "initializeCommand": "if ! docker network ls | awk '{ print $2 }' | grep -qx 'app-network'; then docker network create --driver bridge app-network; fi",
+    "runArgs": [
+        "--network=app-network"
+    ]
 }

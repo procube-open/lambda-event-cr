@@ -1,0 +1,13 @@
+{
+  "name": "lambda-example-ts",
+  "version": "1.0.0",
+  "description": "Example of lambda described with typescript",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.146",
+    "esbuild": "^0.24.2"
+  }
+}

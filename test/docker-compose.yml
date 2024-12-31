@@ -1,0 +1,55 @@
+services:
+  lambda-python:
+    build:
+      context: ./python 
+    container_name: lambda-python.app-network
+    profiles:
+      - background
+  lambda-ts:
+    build:
+      context: ./ts 
+    container_name: lambda-ts.app-network
+    profiles:
+      - background
+  minio:
+    image: minio/minio:latest
+    container_name: minio.app-network
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/mnt/data
+      - ./minio.env:/etc/config.env
+    command: minio server --console-address ":9001" 
+    environment:
+      - MINIO_CONFIG_ENV_FILE=/etc/config.env
+    profiles:
+      - background
+  createbucket:
+    image: minio/mc
+    container_name: createbucket.app-network
+    env_file:
+      - minio.env
+    volumes:
+      - .:/root/test
+    entrypoint: /bin/sh /root/test/create-bucket.sh
+    profiles:
+      - init
+  lambda-event:
+    image: lambda-event:latest
+    container_name: lambda-event.app-network
+    environment:
+      - S3_END_POINT=http://minio.app-network:9000
+      - CONFIG_BUCKET_NAME=config
+      - CONFIG_KEY=event-configs/
+    env_file:
+      - minio.env
+    profiles:
+      - test
+networks:
+  default:
+    name: app-network
+    external: true
+volumes:
+  minio_data:
+    driver: local

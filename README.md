@@ -9,7 +9,7 @@ Lambda event trigger emulater
 
 |環境変数名|説明|例|
 |--|--|--|
-|S3_END_POINT|取得先のS3のURLで省略可能である。格納先としてMinIOを使用する場合に指定し、AWS環境では省略する。|http://minio.local-app-network|
+|S3_END_POINT|取得先のS3のURLで省略可能である。格納先としてMinIOを使用する場合に指定し、AWS環境では省略する。|http://minio.app-network:9000|
 |CONFIG_BUCKET_NAME|設定ファイルが格納されているバケット名|config-bucket|
 |CONFIG_KEY|設定ファイルが格納されているキー。このキーの下にあり拡張子がymlであるファイルをすべて読み出す|scheduler-configs|
 

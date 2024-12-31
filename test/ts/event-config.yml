@@ -1,0 +1,2 @@
+targetUrl: "http://lambda-ts.app-network:8080/2015-03-31/functions/function/invocations"
+rateExpression: rate(1minute)
