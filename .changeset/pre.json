@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "lamda-event": "1.0.0"
+  },
+  "changesets": [
+    "light-llamas-occur"
+  ]
+}
