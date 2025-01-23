@@ -1,6 +1,6 @@
 {
-  "name": "lamda-event",
-  "version": "1.0.1-rc.0",
+  "name": "lambda-event",
+  "version": "1.0.1-rc.1",
   "description": "Lambda event trigger emulator",
   "main": "index.js",
   "repository": "https://github.com/procube-open/lambda-event-cr",

@@ -2,4 +2,4 @@
 'lambda-event': patch
 ---
 
-cs-toos の導入
+Fix spell miss lamda

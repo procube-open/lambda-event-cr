@@ -2,9 +2,10 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "lamda-event": "1.0.0"
+    "lambda-event": "1.0.0"
   },
   "changesets": [
+    "early-dolls-vanish",
     "light-llamas-occur"
   ]
 }
