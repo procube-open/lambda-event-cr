@@ -69,5 +69,3 @@ typings/
 .env
 .next
 dist/
-test/ts/index.js
-test/ts/index.js.map
