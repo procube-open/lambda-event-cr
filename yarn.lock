@@ -945,9 +945,9 @@
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
 "@procube/cs-tools@^1.0.9":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@procube/cs-tools/-/cs-tools-1.0.10.tgz#0e2d9e408a365cb5f852007a082852242247432c"
-  integrity sha512-wAp2R82P80D6tD2ieXanqAsHrErR3H3IPbbpLWTi0lVEUbdYj8moNyIlweIN22iiavwZvbXbRSEyqcyOuYMXTQ==
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@procube/cs-tools/-/cs-tools-1.0.11.tgz#befd879900442dfbc6f41b40f6734b9202836be9"
+  integrity sha512-gyp6yXBgPqwG4epsI66Q1lmRTWNbUWiwD03L6w+PXB3BXrNCRcwOzP1Zx0enlpZQhYoPDwXQQsiIzzJUiTfaig==
 
 "@smithy/abort-controller@^4.0.1":
   version "4.0.1"
