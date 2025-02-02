@@ -2,7 +2,8 @@
     "name": "lambda-event",
     "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node:20",
     "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "customizations": {
         "vscode": {
